@@ -18,23 +18,36 @@ suite('Functional Tests', function() {
     suite('GET /api/stock-prices => stockData object', function() {
       
       test('1 stock', function(done) {
-       chai.request(server)
+        chai.request(server)
+         .get('/api/stock-prices')
+         .query({stock: 'goog'})
+         .end(function(err, res){
+           assert.equal(res.body['stockData']['stock'], 'goog')
+           assert.isNotNull(res.body['stockData']['price'])
+            assert.isNotNull(res.body['stockData']['likes'])
+           done();
+         });
+       });
+      
+       test('1 stock with like', function(done) {
+        chai.request(server)
         .get('/api/stock-prices')
-        .query({stock: 'goog'})
+        .query({stock: 'aapl', like: true})
         .end(function(err, res){
-          
-          //complete this one too
-          
+          assert.equal(res.body['stockData']['stock'], 'aapl')
+          assert.equal(res.body['stockData']['likes'], 1)
           done();
         });
       });
       
-      test('1 stock with like', function(done) {
-        
-      });
-      
       test('1 stock with like again (ensure likes arent double counted)', function(done) {
-        
+        chai.request(server)
+        .get('/api/stock-prices')
+        .query({stock: 'aapl', like: true})
+        .end(function(err, res){
+          assert.equal(res.body, 'Error: Only 1 Like per IP Allowed')
+          done()
+        });
       });
       
       test('2 stocks', function(done) {
