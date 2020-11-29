@@ -20,11 +20,12 @@ app.use(cors({origin: '*'})); //For FCC testing purposes only
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet.contentSecurityPolicy({
-  directives:{
-    scriptSrc:["'self'"],
-    styleSrc:["'self'"]
-  }
+	directives:{
+		scriptSrc: ["'self'"],
+		styleSrc: ["'self'"]
+	}
 }))
+app.enable('trust proxy')
 
 //Index page (static HTML)
 app.route('/')
@@ -44,7 +45,7 @@ app.use(function(req, res, next) {
     .type('text')
     .send('Not Found');
 });
-app.enable('trust proxy')
+
 
 //Start our server and tests!
 app.listen(process.env.PORT || 3000, function () {
